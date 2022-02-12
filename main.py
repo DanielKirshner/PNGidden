@@ -1,9 +1,28 @@
-# import numpy as np
-
-END_HEX = b"\x00\x00\x00\x00\x49\x45\x4e\x44\xae\x42\x60\x82"
+import numpy as np
+import PIL.Image
+    
 
 def main():
-    pass
+    message_to_hide = "This is my secret!"
+    image = PIL.Image.open('image.png', 'r')
+    width, height = image.size
+    img_arr = np.array(list(image.getdata()))
+
+    if image.mode == 'P':
+        print("Not Supported.")
+        exit()
+    
+    channels = 4 if image.mode == 'RGBA' else 3
+    pixels = img_arr.size // channels
+    stop_indicator = "$STOP$"
+    stop_indicator_length = len(stop_indicator)
+
+    message_to_hide += stop_indicator
+
+    byte_message = ''.join(f"{ord(c):08b}" for c in message_to_hide)
+    print(byte_message)
+
+
 
 if __name__ == '__main__':
     main()
