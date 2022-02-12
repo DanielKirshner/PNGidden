@@ -11,7 +11,7 @@ Last 12 bytes:
 00 00 00 00 49 45 4e 44 ae 42 60 82   |   ....IEND.B`.|
 ```
 
-*File Chunks*
+### File Chunks
 
 IHDR = Header
 
