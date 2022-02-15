@@ -27,6 +27,7 @@ IDAT = Image Data (Pixels)
 IEND = End of file
 
 ## Setup
+Install pip prerequisites
 ```
 pip install -r requirements.txt
 ```
