@@ -1,6 +1,11 @@
 import numpy as np
 import PIL.Image
-    
+import os
+
+
+def is_file_exists(file_path):
+    return os.path.isfile(file_path)
+
 
 def main():
     message_to_hide = "This is my secret!"
