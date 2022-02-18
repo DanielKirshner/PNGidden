@@ -50,6 +50,6 @@ python main.py
 python3 main.py
 ```
 
-![](2022-02-18-18-06-52.png)
+![](TUI.png)
 
 ### © 2022 Daniel Kirshner. All rights reserved.
