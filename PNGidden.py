@@ -1,22 +1,26 @@
 from rich import print
 import numpy as np
 import PIL.Image
+import sys
 import os
 
 
-VERSION = "1.0.0"
+VERSION = "v1.0.1"
 STOP_INDICATOR = "$STOP$"
+MAJOR_VERSION_REQUIRED = 3
+MINIMUM_MINOR_VERSION_REQUIRED = 10
+REQUIRED_PIP_PACKAGES = ["numpy", "pillow", "rich"]
 
 
-def is_file_exists(file_path):
+def is_file_exists(file_path: str):
     return os.path.isfile(file_path)
 
 
-def is_file_png(file_path):
+def is_file_png(file_path: str):
     return file_path.endswith('.png')
 
 
-def is_file_exe(file_path):
+def is_file_exe(file_path: str):
     return file_path.endswith('.exe')
 
 
@@ -55,7 +59,7 @@ def get_exe_path_from_user():
     return exe_path
 
 
-def hide_exe_in_image(image_path, exe_path):
+def hide_exe_in_image(image_path: str, exe_path: str):
     """
     Hiding the exe file inside the png image file. Returns a message to print.
     """
@@ -64,7 +68,7 @@ def hide_exe_in_image(image_path, exe_path):
     print("[bold green]Successfully hidden exe file in the image!")
 
 
-def extract_exe_from_image(image_path):
+def extract_exe_from_image(image_path: str):
     """
     Extracting the exe file from the png image file. Returns a message to print.
     """
@@ -82,7 +86,7 @@ def extract_exe_from_image(image_path):
     print(f"[bold green]Successfully extracted exe file from the image!\nNew exe is -> {exe_path}")
 
 
-def hide_message_in_image(image_path, message_to_hide):
+def hide_message_in_image(image_path: str, message_to_hide: str):
     image = PIL.Image.open(image_path, 'r')
     width, height = image.size
     img_arr = np.array(list(image.getdata()))
@@ -115,7 +119,7 @@ def hide_message_in_image(image_path, message_to_hide):
     print(f"[bold green]Successfully hidden the message inside the image!\nNew png file is -> {encoded_image_path}")
 
 
-def extract_message_from_image(image_path):    
+def extract_message_from_image(image_path: str):    
     image = PIL.Image.open(image_path, 'r')
     img_arr = np.array(list(image.getdata()))
     channels = 4 if image.mode == 'RGBA' else 3
@@ -129,7 +133,7 @@ def extract_message_from_image(image_path):
     secret_message = ''.join(secret_message)
 
     if STOP_INDICATOR in secret_message:
-        print(secret_message[:secret_message.index(STOP_INDICATOR)])
+        print(f"\n[bold green]Secret Message ->\n{secret_message[:secret_message.index(STOP_INDICATOR)]}\n")
     else:
         print("[bold yellow]Could not find secret message")
 
@@ -171,12 +175,29 @@ def run_TUI():
             exit()
 
 
+def check_python_version():
+    major = sys.version_info.major
+    minor = sys.version_info.minor
+    micro = sys.version_info.micro
+    
+    if (major < MAJOR_VERSION_REQUIRED or (major == MAJOR_VERSION_REQUIRED and minor < MINIMUM_MINOR_VERSION_REQUIRED)):
+        print(
+            "[bold red]You are using an old python version "
+            f"[{major}.{minor}.{micro}]\n"
+            f"Please update your python to {MAJOR_VERSION_REQUIRED}.{MINIMUM_MINOR_VERSION_REQUIRED}+"
+        )
+        exit()
+
+
 def main():
     try:
+        check_python_version()
         print_title()
         run_TUI()
     except KeyboardInterrupt:
         print("[bold red]\nStopped.")
+    except ModuleNotFoundError:
+        print("[bold red]Missing one of the pip packages.\nPlease run: pip install -r requirements.txt")
     except Exception:
         print("[bold red]\nError occured.")
     
