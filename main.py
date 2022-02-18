@@ -3,6 +3,9 @@ import PIL.Image
 import os
 
 
+STOP_INDICATOR = "$STOP$"
+
+
 def is_file_exists(file_path):
     return os.path.isfile(file_path)
 
@@ -55,6 +58,8 @@ def hide_message_in_image(image_path, message_to_hide):
         return "Image path is invalid."
     if is_file_png(image_path) == False:
         return "The image is not a PNG file."
+    if len(message_to_hide) == 0:
+        return "Message can not be empty"
 
     image = PIL.Image.open(image_path, 'r')
     width, height = image.size
@@ -65,8 +70,7 @@ def hide_message_in_image(image_path, message_to_hide):
     
     channels = 4 if image.mode == 'RGBA' else 3
     pixels = img_arr.size // channels
-    stop_indicator = "$STOP$"
-    message_to_hide += stop_indicator
+    message_to_hide += STOP_INDICATOR
     byte_message = ''.join(f"{ord(c):08b}" for c in message_to_hide)
     print(f"Message to hide (in bits) :\n{byte_message}")
     bits = len(byte_message)
@@ -87,9 +91,34 @@ def hide_message_in_image(image_path, message_to_hide):
     return f"Successfully hidden the message inside the image!\nNew png file is -> {encoded_image_path}"
 
 
+def extract_message_from_image(image_path):
+    if is_file_exists(image_path) == False:
+        return "Image path is invalid."
+    if is_file_png(image_path) == False:
+        return "The image is not a PNG file."
+    
+    image = PIL.Image.open(image_path, 'r')
+    img_arr = np.array(list(image.getdata()))
+    channels = 4 if image.mode == 'RGBA' else 3
+    pixels = img_arr.size // channels
+
+    secret_bits = [bin(img_arr[i][j])[-1] for i in range(pixels) for j in range(0, 3)]
+    secret_bits = ''.join(secret_bits)
+    secret_bits = [secret_bits[i:i+8] for i in range(0, len(secret_bits), 8)]
+
+    secret_message = [chr(int(secret_bits[i], 2)) for i in range(len(secret_bits))]
+    secret_message = ''.join(secret_message)
+
+    if STOP_INDICATOR in secret_message:
+        print(secret_message[:secret_message.index(STOP_INDICATOR)])
+    else:
+        print("Could not find secret message")
+
+
 def main():
-    hiding_result = hide_message_in_image('image.png', 'This is my secret!')
-    print(hiding_result)
+    # hiding_result = hide_message_in_image('a.png', 'This is my secret!')
+    # print(hiding_result)
+    extract_message_from_image('encoded.png')
 
 
 if __name__ == '__main__':
