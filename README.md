@@ -26,12 +26,30 @@ IDAT = Image Data (Pixels)
 
 IEND = End of file
 
-## Setup
-Install pip prerequisites
+## Setup & Requirements
+
+* Install `python 3.10.0` or upper from -> https://www.python.org/
+
+* Make sure your version is 3.10.0 or upper
+```
+python --version
+```
+
+* Install pip prerequisites
 ```
 pip install -r requirements.txt
 ```
-## Run
+## Usage
+* Windows 10/11:
 ```
 python main.py
 ```
+
+* Linux or Mac OS:
+```
+python3 main.py
+```
+
+![](2022-02-18-18-06-52.png)
+
+### © 2022 Daniel Kirshner. All rights reserved.
