@@ -1,2 +1,5 @@
 numpy
 pillow
+termcolor
+pyfiglet
+rich
