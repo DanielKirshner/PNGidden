@@ -179,7 +179,7 @@ def run_pngidden():
     except KeyboardInterrupt:
         print("[bold red]\nStopped.")
     except ModuleNotFoundError:
-        print("[bold red]\nMissing one of the pip packages.\nPlease run: pip install -r requirements.txt")
+        print("[bold red]\nMissing one of the pip packages.\nPlease run setup.py")
     except Exception:
         print("[bold red]\nError occured.")
     
