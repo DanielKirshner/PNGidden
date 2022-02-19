@@ -5,26 +5,23 @@ import sys
 import os
 
 
-VERSION = "v1.0.1"
+PROGRAM_VERSION = "v1.0.2"
 STOP_INDICATOR = "$STOP$"
-MAJOR_VERSION_REQUIRED = 3
-MINIMUM_MINOR_VERSION_REQUIRED = 10
-REQUIRED_PIP_PACKAGES = ["numpy", "pillow", "rich"]
 
 
-def is_file_exists(file_path: str):
+def is_file_exists(file_path: str) -> bool:
     return os.path.isfile(file_path)
 
 
-def is_file_png(file_path: str):
+def is_file_png(file_path: str) -> bool:
     return file_path.endswith('.png')
 
 
-def is_file_exe(file_path: str):
+def is_file_exe(file_path: str) -> bool:
     return file_path.endswith('.exe')
 
 
-def get_png_path_from_user():
+def get_png_path_from_user() -> str:
     is_file = False
     is_png = False
     while is_file == False or is_png == False:
@@ -38,14 +35,14 @@ def get_png_path_from_user():
     return image_path
 
 
-def get_secret_message_from_user():
+def get_secret_message_from_user() -> str:
     secret_message = input("Enter your secret message -> ")
     while(len(secret_message) == 0):
         secret_message = input("Message can not be empty... Try again -> ")
     return secret_message
 
 
-def get_exe_path_from_user():
+def get_exe_path_from_user() -> str:
     is_file = False
     is_exe = False
     while is_file == False or is_exe == False:
@@ -59,18 +56,18 @@ def get_exe_path_from_user():
     return exe_path
 
 
-def hide_exe_in_image(image_path: str, exe_path: str):
+def hide_exe_in_image(image_path: str, exe_path: str) -> None:
     """
-    Hiding the exe file inside the png image file. Returns a message to print.
+    Hiding the exe file inside the png image file.
     """
     with open(image_path, 'ab') as f, open(exe_path, 'rb') as e:
         f.write(e.read())
     print("[bold green]Successfully hidden exe file in the image!")
 
 
-def extract_exe_from_image(image_path: str):
+def extract_exe_from_image(image_path: str) -> None:
     """
-    Extracting the exe file from the png image file. Returns a message to print.
+    Extracting the exe file from the png image file and display the new exe path.
     """
     end_hex = b"\x00\x00\x00\x00\x49\x45\x4e\x44\xae\x42\x60\x82"
     # Seeking the exe file in the image:
@@ -86,7 +83,7 @@ def extract_exe_from_image(image_path: str):
     print(f"[bold green]Successfully extracted exe file from the image!\nNew exe is -> {exe_path}")
 
 
-def hide_message_in_image(image_path: str, message_to_hide: str):
+def hide_message_in_image(image_path: str, message_to_hide: str) -> None:
     image = PIL.Image.open(image_path, 'r')
     width, height = image.size
     img_arr = np.array(list(image.getdata()))
@@ -119,7 +116,7 @@ def hide_message_in_image(image_path: str, message_to_hide: str):
     print(f"[bold green]Successfully hidden the message inside the image!\nNew png file is -> {encoded_image_path}")
 
 
-def extract_message_from_image(image_path: str):    
+def extract_message_from_image(image_path: str) -> None:    
     image = PIL.Image.open(image_path, 'r')
     img_arr = np.array(list(image.getdata()))
     channels = 4 if image.mode == 'RGBA' else 3
@@ -138,7 +135,7 @@ def extract_message_from_image(image_path: str):
         print("[bold yellow]Could not find secret message")
 
 
-def print_title():
+def print_title() -> None:
     print(
         "[bold green]"
         " ____  _   _  ____ _     _     _\n"
@@ -146,11 +143,11 @@ def print_title():
         "| |_) |  \| | |  _| |/ _` |/ _` |/ _ \ '_ \ \n"
         "|  __/| |\  | |_| | | (_| | (_| |  __/ | | |\n"
         "|_|   |_| \_|\____|_|\__,_|\__,_|\___|_| |_|\n"
-        f"\n\t\t  [italic green]{VERSION}\n"
+        f"\n\t\t  [italic green]{PROGRAM_VERSION}\n"
     )
 
 
-def run_TUI():
+def run_TUI() -> None:
     options = ["Exit (or Ctrl+C anytime)", "Hide message in image", "Extract message from image",
     "Hide exe in image", "Extract exe from image."]
     print_options = ''
@@ -161,7 +158,7 @@ def run_TUI():
     match user_choice:
         case '0':
             print("[bold cyan]Abort.")
-            exit()
+            sys.exit()
         case '1':
             hide_message_in_image(get_png_path_from_user(), get_secret_message_from_user())
         case '2':
@@ -172,36 +169,20 @@ def run_TUI():
             extract_exe_from_image(get_png_path_from_user())
         case _:
             print("[bold red]Invalid option. Abort.")
-            exit()
+            sys.exit()
 
 
-def check_python_version():
-    major = sys.version_info.major
-    minor = sys.version_info.minor
-    micro = sys.version_info.micro
-    
-    if (major < MAJOR_VERSION_REQUIRED or (major == MAJOR_VERSION_REQUIRED and minor < MINIMUM_MINOR_VERSION_REQUIRED)):
-        print(
-            "[bold red]You are using an old python version "
-            f"[{major}.{minor}.{micro}]\n"
-            f"Please update your python to {MAJOR_VERSION_REQUIRED}.{MINIMUM_MINOR_VERSION_REQUIRED}+"
-        )
-        exit()
-
-
-def main():
+def run_pngidden():
     try:
-        check_python_version()
         print_title()
         run_TUI()
     except KeyboardInterrupt:
         print("[bold red]\nStopped.")
     except ModuleNotFoundError:
-        print("[bold red]Missing one of the pip packages.\nPlease run: pip install -r requirements.txt")
+        print("[bold red]\nMissing one of the pip packages.\nPlease run: pip install -r requirements.txt")
     except Exception:
         print("[bold red]\nError occured.")
     
 
-
 if __name__ == '__main__':
-    main()
+    run_pngidden()
