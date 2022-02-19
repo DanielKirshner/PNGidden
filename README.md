@@ -39,15 +39,21 @@ python --version
 ```
 pip install -r requirements.txt
 ```
+
+* You can also run my setup file to verify everything works:
+```
+python setup.py
+```
+
 ## Usage
 * Windows 10/11:
 ```
-python main.py
+python PNGidden.py
 ```
 
 * Linux or Mac OS:
 ```
-python3 main.py
+python3 PNGidden.py
 ```
 
 ![](TUI.png)
