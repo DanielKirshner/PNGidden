@@ -194,8 +194,8 @@ def run_pngidden():
         print("[bold red]\nStopped.")
     except ModuleNotFoundError:
         print("[bold red]\nMissing one of the pip packages.\nPlease run setup.py")
-    # except Exception:
-    #     print("[bold red]\nError occured.")
+    except Exception:
+        print("[bold red]\nError occured.")
     
 
 if __name__ == '__main__':
