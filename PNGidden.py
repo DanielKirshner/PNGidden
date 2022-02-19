@@ -1,3 +1,4 @@
+from time import strftime
 from rich import print
 import numpy as np
 import PIL.Image
@@ -5,7 +6,7 @@ import sys
 import os
 
 
-PROGRAM_VERSION = "v1.0.2"
+PROGRAM_VERSION = "v1.0.3"
 STOP_INDICATOR = "$STOP$"
 
 
@@ -19,6 +20,10 @@ def is_file_png(file_path: str) -> bool:
 
 def is_file_exe(file_path: str) -> bool:
     return file_path.endswith('.exe')
+
+
+def timestamp() -> str:
+    return strftime("%H-%M-%S")
 
 
 def get_png_path_from_user() -> str:
@@ -77,10 +82,13 @@ def extract_exe_from_image(image_path: str) -> None:
         f.seek(offset + len(end_hex))
         
         # Extracting the exe file out to a file:
-        exe_path = 'extracted_exe.exe'
+        exe_path = f"extracted-exe-{timestamp()}.exe"
         with open(exe_path, 'wb') as e:
             e.write(f.read())
-    print(f"[bold green]Successfully extracted exe file from the image!\nNew exe is -> {exe_path}")
+    print(
+        f"[bold green]Successfully extracted exe file from the image!\n"
+        f"New exe is -> {exe_path}"
+    )
 
 
 def hide_message_in_image(image_path: str, message_to_hide: str) -> None:
@@ -111,9 +119,12 @@ def hide_message_in_image(image_path: str, message_to_hide: str) -> None:
                     index += 1
     img_arr = img_arr.reshape((height, width, channels))
     result = PIL.Image.fromarray(img_arr.astype('uint8'), image.mode)
-    encoded_image_path = 'encoded.png'
+    encoded_image_path = f"encoded-{timestamp()}.png"
     result.save(encoded_image_path)
-    print(f"[bold green]Successfully hidden the message inside the image!\nNew png file is -> {encoded_image_path}")
+    print(
+        f"[bold green]Successfully hidden the message inside the image!\n"
+        f"New png file is -> {encoded_image_path}"
+    )
 
 
 def extract_message_from_image(image_path: str) -> None:    
@@ -130,7 +141,10 @@ def extract_message_from_image(image_path: str) -> None:
     secret_message = ''.join(secret_message)
 
     if STOP_INDICATOR in secret_message:
-        print(f"\n[bold green]Secret Message ->\n{secret_message[:secret_message.index(STOP_INDICATOR)]}\n")
+        print(
+            f"\n[bold green]Secret Message ->\n"
+            f"{secret_message[:secret_message.index(STOP_INDICATOR)]}\n"
+        )
     else:
         print("[bold yellow]Could not find secret message")
 
@@ -180,8 +194,8 @@ def run_pngidden():
         print("[bold red]\nStopped.")
     except ModuleNotFoundError:
         print("[bold red]\nMissing one of the pip packages.\nPlease run setup.py")
-    except Exception:
-        print("[bold red]\nError occured.")
+    # except Exception:
+    #     print("[bold red]\nError occured.")
     
 
 if __name__ == '__main__':
