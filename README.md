@@ -28,7 +28,7 @@ IEND = End of file
 
 ## Setup & Requirements
 
-* Install `python 3.10.0` or upper from -> https://www.python.org/
+* Install python 3.10.0 or upper from [here](https://www.python.org/)
 
 * Make sure your version is 3.10.0 or upper
 ```
