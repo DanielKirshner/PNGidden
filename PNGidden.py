@@ -1,6 +1,7 @@
 from time import strftime
 from rich import print
 import numpy as np
+import imageio
 import PIL.Image
 import sys
 import os
@@ -92,7 +93,7 @@ def extract_exe_from_image(image_path: str) -> None:
 
 
 def hide_message_in_image(image_path: str, message_to_hide: str) -> None:
-    image = PIL.Image.open(image_path, 'r')
+    image = imageio.imread(image_path, as_gray=False, pilmode="RGB")
     width, height = image.size
     img_arr = np.array(list(image.getdata()))
 
@@ -128,7 +129,7 @@ def hide_message_in_image(image_path: str, message_to_hide: str) -> None:
 
 
 def extract_message_from_image(image_path: str) -> None:    
-    image = PIL.Image.open(image_path, 'r')
+    image = imageio.imread(image_path, as_gray=False, pilmode="RGB")
     img_arr = np.array(list(image.getdata()))
     channels = 4 if image.mode == 'RGBA' else 3
     pixels = img_arr.size // channels
