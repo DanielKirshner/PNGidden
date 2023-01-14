@@ -5,7 +5,7 @@ import pkg_resources
 
 MAJOR_VERSION_REQUIRED = 3
 MINIMUM_MINOR_VERSION_REQUIRED = 10
-REQUIRED_PIP_PACKAGES = {"numpy", "pillow", "rich"}
+REQUIRED_PIP_PACKAGES = {"numpy", "pillow", "rich", "imageio"}
 
 
 def check_for_python_version() -> None:
